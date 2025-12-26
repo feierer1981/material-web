@@ -1,30 +1,19 @@
-name: Deploy to Firebase Hosting on release and manual
-'on':
-  release:
-    types:
-      - published
-  workflow_dispatch:
-    # allows triggering from the gihub UI
+name: Deploy to Firebase Hosting on merge
 
-permissions:
-  contents: read
+on:
+  push:
+    branches:
+      - main
 
 jobs:
   build_and_deploy:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
-        with:
-          node-version: 20
-          cache: npm
-      - uses: google/wireit@setup-github-actions-caching/v2
-      - run: npm ci
-      - run: 'npm run build:catalog'
+      - uses: actions/checkout@v4
+
       - uses: FirebaseExtended/action-hosting-deploy@v0
         with:
-          repoToken: '${{ secrets.GITHUB_TOKEN }}'
-          firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_MATERIAL_WEB_CATALOG }}'
+          repoToken: ${{ secrets.GITHUB_TOKEN }}
+          firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_RECHNUNG_AB_LIEFERSCHEIN }}
           channelId: live
-          projectId: material-web-catalog
-          entryPoint: catalog
+          projectId: rechnung-ab-lieferschein-9abe8
